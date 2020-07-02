@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Game room</title>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    function rollDice(){
+        socket.emit('rollDice', {
+            description: "Event that lets user roll the dice"
+        })
+    
+    }
+</script>
+<body>
+    <h1>MERI DUKAAN</h1>
+    <button onclick="rollDice"> Roll </button>
+</body>
+</html>

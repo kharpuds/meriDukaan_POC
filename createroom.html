@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Create Room</title>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+   var socket = io();
+   var myWindow = null;
+
+
+   function createRoom() {
+      socket.emit('createRoom', {
+         description: "Event that triggers create room", limit: document.getElementById("userLimit").value,
+         username: document.getElementById("username").value
+      })
+   }
+
+   socket.on('roomCreated', function (data) {
+      document.getElementById("message").innerHTML = data.description;
+   });
+
+   socket.on('errorCreatingRoom', function (data) {
+      document.getElementById("message").innerHTML = data.description;
+   });
+
+   // function startGame(){
+   //    myWindow = window.open("", "_self");
+   //    myWindow.document.write("<p>You have entered the game room</p>");
+   // }
+
+   // document.getElementById("startGame").onclick = function () {
+   //      location.href = "http://localhost:3000/gameRoom.html";
+   // };
+
+
+</script>
+
+<body>
+   <label>Enter username:</label>
+   <input type="text" id="username" placeholder="Enter username" />
+   <br />
+   <label>Enter max number of players:</label>
+   <input type="text" id="userLimit" placeholder="Enter max players" />
+   <br />
+   <button onclick="createRoom()">createRoom</button>
+   <br />
+   <input type=button onClick="location.href='/gameRoom'" value='Start Game'>
+   <br />
+   <div id="message">
+   </div>
+</body>
+
+</html>

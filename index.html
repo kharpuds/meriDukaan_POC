@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Rooms</title>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+   var socket = io();
+   var pageBody;
+   socket.on('connectToRoom', function (data) {
+      document.body.innerHTML = '';
+      document.write(data);
+   });
+   function createRoom() {
+      document.body.innerHTML = ' <label>Enter username:</label>\
+   <input type="text" id="username" placeholder="Enter username" />\
+   <br />\
+   <label>Enter max number of players:</label>\
+   <input type="text" id="userLimit" placeholder="Enter max players" />\
+   <br />\
+   <button onclick="createNewRoom()">Create New Room</button>\
+   <br />\
+   <button onclick="startGame()">Start Game</button>\
+   <br />\
+   <div id="message">\
+   </div>'
+   }
+
+   function createNewRoom() {
+      socket.emit('createRoom', {
+         description: "Event that triggers create room", limit: document.getElementById("userLimit").value,
+         username: document.getElementById("username").value
+      })
+   }
+
+   socket.on('errorCreatingRoom', function (data) {
+      document.getElementById("message").innerHTML = data.description;
+   });
+
+   socket.on('roomCreated', function (data) {
+      document.getElementById("message").innerHTML = data.description;
+   });
+
+   function startGame() {
+      document.body.innerHTML = '<h1>MERI DUKAAN</h1>\
+    <button onclick="rollDice()"> Roll </button>\
+    <br />\
+    <div id="sampleOut">\
+    </div>'
+   }
+
+   function rollDice() {
+      socket.emit('rollDice', {
+         description: "Sample event to test functionality"
+      })
+   }
+
+   socket.on('sampleOutput', function (data) {
+      console.log("Data received for socket  "+socket.id+" is "+data.output)
+      document.getElementById("sampleOut").innerHTML = data.output;
+   });
+
+   function joinRoom() {
+      document.body.innerHTML = '    <input type="text" id="enterCode" placeholder="Enter Room code.." />\
+    <input type="text" id="username" placeholder="Enter username" />\
+    <button onclick="joinNewRoom()">Join Room</button>\
+    <br />\
+    <button onclick="startGame()">Start Game</button>\
+    <br />\
+    <div id="message">\
+    </div>'
+   }
+
+   function joinNewRoom(){
+      socket.emit('joinRoom', { code: document.getElementById("enterCode").value, name: document.getElementById("username").value })
+   }
+   
+   socket.on('joinedRoom', function (data) {
+        document.getElementById("message").innerHTML = data.description;
+        socketId=data.socketId;
+    });
+
+    socket.on('errorJoiningRoom', function (data) {
+        document.getElementById("message").innerHTML = data.description;
+    });
+
+</script>
+
+<body>
+   <button onClick="createRoom()">Create Room</button>
+   <button onClick="joinRoom()">Join Room</button>
+</body>
+
+</html>
