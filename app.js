@@ -104,7 +104,7 @@ io.on('connection', function (socket) {
       randomnum = Math.floor(100000 + Math.random() * 900000);
       console.log(roomnum);
       console.log(socket.id);
-      console.log(randomnum);
+      // console.log(randomnum);
       var roomlength=io.adapter.rooms[roomnum];
       console.log(Object.keys(roomlength).length);
       socket.in(roomnum).emit('sampleOutput', { output: randomnum });
